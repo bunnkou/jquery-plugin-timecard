@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link href="plugins/Bootstrap/css/bootstrap.min.css" rel="stylesheet">
+		<link href="plugins/select2-4.0.3/css/select2.min.css" rel="stylesheet">
+		<style>
+			body{ margin:40px; }
+			#timecard-table tr{	height:50px; line-height:50px; }
+			#unchoice_persons a{ margin-right:5px; }
+			.timecard-persons a{ margin:0 5px 5px 0; }
+		</style>
+	</head>
+	<body>
+		<div style="margin-bottom:20px;">
+			<button class="btn btn-default" type="submit" onclick="addRow();">增加</button>
+			<button class="btn btn-danger" type="submit" onclick="removeRow();">删除</button>
+			<button class="btn btn-success" type="submit" onclick="accept();">确认</button>
+		</div>
+		<table id="timecard-table" class="table table-hover" style="margin:0 auto;"></table>
+		<hr>
+		<div id="unchoice_persons">
+			<h5>未进项目人员：</h5>
+		</div>
+		
+		<input type="hidden" id="forSelect2" value=""/>
+		
+		<script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
+		<script type="text/javascript" src="plugins/Bootstrap/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="plugins/select2-4.0.3/js/select2.min.js"></script>
+		<script type="text/javascript" src="js/timecard.js"></script>
+		<script>
+			var persons = ['曹操','刘备','孙权','司马懿','诸葛亮','关羽','张飞','魏延','杨仪','陆逊','郭嘉','周瑜','董卓','袁绍','刘表'],
+				sData = JSON.parse('[{"id":"1", "text":"洛阳"},{"id":"2", "text":"许昌"},{"id":"3", "text":"江陵"},{"id":"4", "text":"建业"},{"id":"5", "text":"成都"},{"id":"6", "text":"长安"},{"id":"7", "text":"永安"},{"id":"8", "text":"夷陵"}]'),
+				oData = JSON.parse('[{"title": "1","persons": ["曹操", "郭嘉"]},{"title": "5","persons": ["张飞"]}]');
+			$(document).ready(function(){				
+				$('#timecard-table').timecard({
+					data:oData,
+					columns:[[
+						{field:'title', title:'城市', width:'80%', 
+							editor:{type:'select', options:{data:sData, required:true}}
+						},
+						{field:'persons', title:'成员', width:'20%', editor:{type:'label'}}
+					]],
+					sourcePool: "unchoice_persons",
+					success:function(o){
+						RemoveElementFromArray(o.INIT_PERSONS, persons);
+						o.OperatePerson(persons, "remove");
+					}
+				});
+			});
+			
+			function addRow(){
+				$('#timecard-table').timecard('addRow');
+			}
+			
+			function removeRow(){
+				$('#timecard-table').timecard('removeRow');
+			}
+			
+			function accept(){
+				var data = $('#timecard-table').timecard('getData');
+				console.log(data);
+			}
+			
+			function RemoveElementFromArray(subArr, tarArr){
+				for(var i=0, index; i<subArr.length; i++){
+					index = tarArr.indexOf(subArr[i]);
+					if (index<0) return;
+					tarArr.splice(index,1);
+				}
+			}
+		</script>
+	</body>
+</html>
