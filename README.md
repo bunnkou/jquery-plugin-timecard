@@ -5,5 +5,5 @@
 
 # 依赖
 jquery 2.0.0+<br/>
-bootstrap<br/>
+bootstrap 3+<br/>
 select2<br/>
