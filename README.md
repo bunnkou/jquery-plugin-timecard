@@ -5,7 +5,7 @@
 
 # 参数
 1. data: json格式数据<br/>
-2. columns: 1) field: 字段名称 2) title: 字段标题 3) width: 表格宽度
+2. columns: 1) field: 字段名称 2) title: 字段标题 3) width: 表格宽度 4) editor: 调用其他插件
 3. sourcePool: label标签存放位置
 4. success: 加载成功后的回调函数
 
