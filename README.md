@@ -5,18 +5,13 @@
 
 # 参数
 1. data: json格式数据<br/>
-2. columns: 
-   1) field: 字段名称
-   2) title: 字段标题
-   3) width: 表格宽度
+2. columns: 1) field: 字段名称 2) title: 字段标题 3) width: 表格宽度
 3. sourcePool: label标签存放位置
 4. success: 加载成功后的回调函数
 
 # editor
 1. type: editor 类型（select/label）
-2. options: 
-   1) data: editor 控件初始加载数据
-   2) required: 必填项（目前未实现）
+2. options: 1) data: editor 控件初始加载数据  2) required: 必填项（目前未实现）
 
 # 依赖
 jquery 2.0.0+<br/>
