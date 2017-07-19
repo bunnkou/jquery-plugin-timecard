@@ -16,6 +16,7 @@
 			<button class="btn btn-default" type="submit" onclick="addRow();">增加</button>
 			<button class="btn btn-danger" type="submit" onclick="removeRow();">删除</button>
 			<button class="btn btn-success" type="submit" onclick="accept();">确认</button>
+			<button class="btn btn-info" type="submit" onclick="reload();">重载</button>
 		</div>
 		<table id="timecard-table" class="table table-hover" style="margin:0 auto;"></table>
 		<hr>
@@ -32,7 +33,8 @@
 		<script>
 			var persons = ['曹操','刘备','孙权','司马懿','诸葛亮','关羽','张飞','魏延','杨仪','陆逊','郭嘉','周瑜','董卓','袁绍','刘表'],
 				sData = JSON.parse('[{"id":"1", "text":"洛阳"},{"id":"2", "text":"许昌"},{"id":"3", "text":"江陵"},{"id":"4", "text":"建业"},{"id":"5", "text":"成都"},{"id":"6", "text":"长安"},{"id":"7", "text":"永安"},{"id":"8", "text":"夷陵"}]'),
-				oData = JSON.parse('[{"title": "1","persons": ["曹操", "郭嘉"]},{"title": "5","persons": ["张飞"]}]');
+				oData = JSON.parse('[{"title":"1","persons":"曹操,司马懿"},{"title":"2","persons":"孙权,陆逊,周瑜"}]'),
+				oData2 = JSON.parse('[{"title":"5","persons":"刘备,关羽,张飞"}]');
 			$(document).ready(function(){				
 				$('#timecard-table').timecard({
 					data:oData,
@@ -44,8 +46,9 @@
 					]],
 					sourcePool: "unchoice_persons",
 					success:function(o){
-						RemoveElementFromArray(o.INIT_PERSONS, persons);
-						o.OperatePerson(persons, "remove");
+						var tmpArr = persons;
+						RemoveElementFromArray(o.INIT_PERSONS, tmpArr);
+						o.OperatePerson(tmpArr, "remove");
 					}
 				});
 			});
@@ -63,11 +66,14 @@
 				console.log(data);
 			}
 			
+			function reload(){
+				$('#timecard-table').timecard('reload', oData2);
+			}
+			
 			function RemoveElementFromArray(subArr, tarArr){
 				for(var i=0, index; i<subArr.length; i++){
 					index = tarArr.indexOf(subArr[i]);
-					if (index<0) return;
-					tarArr.splice(index,1);
+					if (index!==-1) tarArr.splice(index,1);
 				}
 			}
 		</script>

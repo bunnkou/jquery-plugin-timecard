@@ -4,7 +4,7 @@
 		this.element = $(element);
 		if(options){
 			this.data = options.data || "";
-			this.sourcePool = $('#'+ options.sourcePool || "body" );
+			this.sourcePool = $('#'+ options.sourcePool);
 			this.callback = options.success;
 			this.CUR_ROW_IDX = -1;
 			this.INIT_PERSONS = [];
@@ -27,9 +27,9 @@
 				}
 				//初始化完成操作
 				this.INIT_PERSONS = this.setInitPersons(this.data);
-				this.callback(this);
-				this.CUR_ROW_IDX = -1;
 			}
+			this.callback(this);
+			this.CUR_ROW_IDX = -1;
 		},
 		
 		setColumns: function(o, tr){
@@ -72,7 +72,6 @@
 			//{field:'title', width:'80%', editor:{type:'select', options:{data:sData}} }
 			if (index == null) index = this.CUR_ROW_IDX;
 			var rowData = [],
-				title = persons = "",
 				tr = this.element.find("tr").eq(index),
 				IS_EDITING = tr.attr('IS_EDITING')==undefined?false:true;
 			for (var i=0, col, editor, value; i<this.columns.length; i++,value=""){
@@ -121,6 +120,13 @@
 			this.OperatePerson(rowData.persons, "remove");
 			$(tr).remove();
 			this.CUR_ROW_IDX=-1;
+		},
+		
+		reload: function(o){			//重载
+			this.element.html("");
+			this.sourcePool.html("");
+			this.data = o;
+			this.init();
 		},
 		
 		OperatePerson: function(o, opt, tr){		//操作人员
@@ -208,7 +214,7 @@
 	};
 	
 	$.fn.timecard = function(){
-		var arg = arguments[0],
+		var arg = arguments,
 			internal_return;
 		
 		var options = $.extend({
@@ -224,7 +230,8 @@
 					)
 				);
 			}else{
-				if(arg)	internal_return = eval('data.'+arg+'()');
+				var param = arg.length>1?arg[1]:"";
+				if(arg)	internal_return = eval('data.'+arg[0]+'(param)');
 			}
 		});
 		if (internal_return !== undefined) return internal_return;
