@@ -13,7 +13,15 @@
 1. type: editor 类型（select/label）
 2. options: 1) data: editor 控件初始加载数据  2) required: 必填项（目前未实现）
 
+# 方法
+1. addRow: 添加行
+2. removeRow: 删除行
+3. getData: 获取列表所有数据
+
 # 依赖
 jquery 2.0.0+<br/>
 bootstrap 3+<br/>
 select2<br/>
+
+# 170719 修改记录
+1. 添加了 reload 方法
