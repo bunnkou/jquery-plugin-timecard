@@ -17,6 +17,7 @@
 1. addRow: 添加行
 2. removeRow: 删除行
 3. getData: 获取列表所有数据
+4. reload:function(data) 根据传入数据，重载列表
 
 # 依赖
 jquery 2.0.0+<br/>
