@@ -8,6 +8,7 @@
 			this.callback = options.success;
 			this.CUR_ROW_IDX = -1;
 			this.INIT_PERSONS = [];
+			this.multiLabel = options.multiLabel || false;
 			this.model = [];
 			this.columns = options.columns[0];
 			this.inputObj = null;
@@ -36,24 +37,31 @@
 			//{field:'title', width:'80%', editor:{type:'select', options:{data:sData}} },
 			var IS_EDITING = $(tr).attr('IS_EDITING')==undefined?false:true;
 			$(tr).html("");
-			for (var i=0, col, editor, html; i<this.columns.length; i++){
+			for (var i=0, col, editor, type, html; i<this.columns.length; i++){
 				col = this.columns[i];
 				editor = col.editor;
-				html = '<td class="'+this.css_prefix+col.field+'" width="'+col.width+'"></td>';
+				html = '<td class="'+this.css_prefix+col.field+'" width="'+col.width+'"';
+				if (typeof(col.hidden)!="undefined") html += ' style="display:none;"';
+				html += '></td>';
 				$(tr).append(html);
-				if (editor.type=="label") {
+				if (typeof(editor)=="undefined") type = "readonly";
+				else type = editor.type;
+				if (type=="readonly"){
+					var text = eval('o.'+col.field);
+					$(tr).find('.'+this.css_prefix+col.field).html(text);
+				}else if(type=="label") {
 					this.OperatePerson(o.persons, 'add', tr);
 				}else{
 					var text = eval('o.'+col.field),
 						value = text;
-					if (editor.type=="select") text = this.Select2_getTextById(editor.options.data, value);
+					if (type=="select") text = this.Select2_getTextById(editor.options.data, value);
 					this.inputObj = text;
 					if (IS_EDITING){
-						this.inputObj = document.createElement(editor.type);
-						$(this.inputObj).addClass(this.css_prefix+'input-'+editor.type).css('width','50%');
+						this.inputObj = document.createElement(type);
+						$(this.inputObj).addClass(this.css_prefix+'input-'+type).css('width','50%');
 					}
 					$(tr).find('.'+this.css_prefix+col.field).html( this.inputObj ).attr('val',value);
-					if (IS_EDITING & editor.type=="select"){
+					if (IS_EDITING & type=="select"){
 						$(this.inputObj).select2({data:editor.options.data}).val( value ).trigger("change");
 					}
 				}
@@ -74,10 +82,14 @@
 			var rowData = [],
 				tr = this.element.find("tr").eq(index),
 				IS_EDITING = tr.attr('IS_EDITING')==undefined?false:true;
-			for (var i=0, col, editor, value; i<this.columns.length; i++,value=""){
+			for (var i=0, col, editor, type, value; i<this.columns.length; i++,value=""){
 				col = this.columns[i];
 				editor = col.editor;
-				if (editor.type=="label"){
+				if (typeof(editor)=="undefined") type = "readonly";
+				else type = editor.type;
+				if (type=="readonly"){
+					value = tr.find('.'+this.css_prefix+col.field).text();
+				}else if (type=="label"){
 					tr.find('.'+this.css_prefix+col.field+' > a').each(function(i, n){
 						if (value) value += ",";
 						value += $(n).text();
@@ -85,7 +97,7 @@
 					if(value) value = value.split(',');
 				}else{
 					if(IS_EDITING){
-						value = tr.find(editor.type).val();	
+						value = tr.find(type).val();	
 					}else{
 						value = tr.find('.'+this.css_prefix+col.field).attr('val');
 					}
@@ -132,8 +144,7 @@
 		OperatePerson: function(o, opt, tr){		//操作人员
 			var target = null,
 				that = this,
-				oArr = [],
-				flag = false;
+				oArr = [];
 			if (tr){
 				target = $(tr).find('.'+this.css2);
 			}else{
@@ -153,10 +164,11 @@
 				if (o.length == undefined) oArr[0] = o;			//object
 				else oArr = o;									//array
 			}
-			for (var i=0, nObj; i<oArr.length; i++){
+			for (var i=0, nObj, labelArea, IS_OBJ, IS_EXISTS; i<oArr.length; i++){
+				IS_OBJ = IS_EXISTS = false;
 				if (typeof(oArr[i])=="object"){
 					nObj = $(oArr[i]).clone();
-					flag = true;
+					IS_OBJ = true;
 				}else{
 					nObj = $(document.createElement('a'));
 					nObj.addClass("btn").addClass("btn-default").addClass("btn-sm").html( oArr[i] )
@@ -164,8 +176,16 @@
 				nObj.bind('click', function(){
 					that.OperatePerson(this, opt=="add"?"remove":"add");
 				});
-				target.append( nObj );
-				if (flag) o.remove();
+				labelArea = target.find('a');
+				for( var j=0; j<labelArea.length; j++ ){
+					if(labelArea[j].text == $(nObj).text()){
+						IS_EXISTS = true;
+						break;
+					}
+				}
+				if (!IS_EXISTS) target.append( nObj );
+				if (this.multiLabel & opt=="add") IS_OBJ = false;		//允许重复选择
+				if (IS_OBJ) o.remove();
 			}
 		},
 		

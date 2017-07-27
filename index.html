@@ -33,21 +33,24 @@
 		<script>
 			var persons = ['曹操','刘备','孙权','司马懿','诸葛亮','关羽','张飞','魏延','杨仪','陆逊','郭嘉','周瑜','董卓','袁绍','刘表'],
 				sData = JSON.parse('[{"id":"1", "text":"洛阳"},{"id":"2", "text":"许昌"},{"id":"3", "text":"江陵"},{"id":"4", "text":"建业"},{"id":"5", "text":"成都"},{"id":"6", "text":"长安"},{"id":"7", "text":"永安"},{"id":"8", "text":"夷陵"}]'),
-				oData = JSON.parse('[{"title":"1","persons":"曹操,司马懿"},{"title":"2","persons":"孙权,陆逊,周瑜"}]'),
-				oData2 = JSON.parse('[{"title":"5","persons":"刘备,关羽,张飞"}]');
+				oData = JSON.parse('[{"id":"1","title":"1","persons":"曹操,司马懿","daterange":"220 - 240"},{"id":"2","title":"2","persons":"孙权,陆逊,周瑜","daterange":"250 - 260"}]'),
+				oData2 = JSON.parse('[{"id":"3","title":"5","persons":"刘备,关羽,张飞","daterange":"210 - 250"}]');
 			$(document).ready(function(){				
 				$('#timecard-table').timecard({
 					data:oData,
 					columns:[[
-						{field:'title', title:'城市', width:'80%', 
+						{field:'id', hidden:true},
+						{field:'title', title:'城市', width:'60%',
 							editor:{type:'select', options:{data:sData, required:true}}
 						},
+						{field:'daterange', title:'年份', width:'20%'},
 						{field:'persons', title:'成员', width:'20%', editor:{type:'label'}}
 					]],
 					sourcePool: "unchoice_persons",
+					multiLabel: false,
 					success:function(o){
 						var tmpArr = persons;
-						RemoveElementFromArray(o.INIT_PERSONS, tmpArr);
+						//RemoveElementFromArray(o.INIT_PERSONS, tmpArr);
 						o.OperatePerson(tmpArr, "remove");
 					}
 				});
