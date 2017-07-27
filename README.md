@@ -8,9 +8,10 @@
 2. columns: 1) field: 字段名称 2) title: 字段标题 3) width: 表格宽度 4) editor: 调用其他插件
 3. sourcePool: label标签存放位置
 4. success: 加载成功后的回调函数
+5. multiLabel：默认为false, 允许重复选择标签，选择标签后，标签不会从 sourcePool 中移除，依然可以选择
 
 # editor
-1. type: editor 类型（select/label）
+1. type: editor 类型（select/label/readonly）
 2. options: 1) data: editor 控件初始加载数据  2) required: 必填项（目前未实现）
 
 # 方法
@@ -26,3 +27,8 @@ select2<br/>
 
 # 170719 修改记录
 1. 添加了 reload 方法
+
+# 170727 修改记录
+1. 添加了 multiLabel 参数
+2. 增加了同行内标签的重复验证，相同标签将不会重复出现
+3. 增加了 readonly 控件类型
