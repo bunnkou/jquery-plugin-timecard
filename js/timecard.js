@@ -78,10 +78,11 @@
 		
 		getRowData: function(index){
 			//{field:'title', width:'80%', editor:{type:'select', options:{data:sData}} }
-			if (index == null) index = this.CUR_ROW_IDX;
+			if (typeof(index)!="number") index = this.CUR_ROW_IDX;
 			var rowData = [],
 				tr = this.element.find("tr").eq(index),
 				IS_EDITING = tr.attr('IS_EDITING')==undefined?false:true;
+			
 			for (var i=0, col, editor, type, value; i<this.columns.length; i++,value=""){
 				col = this.columns[i];
 				editor = col.editor;
@@ -157,6 +158,7 @@
 			}
 			if (target == null) return;
 			if (typeof(o) == 'string'){
+				if (o=="" | o=="undefined") return;
 				if (o.indexOf(",")!==-1) oArr = o.split(",")	//string to array
 				else oArr[0] = o;								//string
 			}else{
