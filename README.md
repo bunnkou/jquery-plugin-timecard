@@ -1,7 +1,8 @@
 # jquery-plugin-timecard
-
 1.支持自定义添加删除项目及相关人员<br/>
 2.支持 select2 插件选择项目<br/>
+
+![image](https://github.com/bunnkou/jquery-plugin-timecard/blob/master/example_1.png)
 
 # 参数
 1. data: json格式数据<br/>
@@ -32,3 +33,8 @@ select2<br/>
 1. 添加了 multiLabel 参数
 2. 增加了同行内标签的重复验证，相同标签将不会重复出现
 3. 增加了 readonly 控件类型
+
+# 170728 修改记录
+1. 增加了点击标签后的 label-click 事件监听
+2. 在样例中增加了选中和未选中标签的颜色区分
+3. 优化了 getData 方法，通过参数可以指定是否改变列表状态

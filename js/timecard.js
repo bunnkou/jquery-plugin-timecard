@@ -29,8 +29,8 @@
 				//初始化完成操作
 				this.INIT_PERSONS = this.setInitPersons(this.data);
 			}
-			this.callback(this);
 			this.CUR_ROW_IDX = -1;
+			this.callback(this);
 		},
 		
 		setColumns: function(o, tr){
@@ -171,10 +171,12 @@
 					IS_OBJ = true;
 				}else{
 					nObj = $(document.createElement('a'));
-					nObj.addClass("btn").addClass("btn-default").addClass("btn-sm").html( oArr[i] )
+					nObj.html(oArr[i]);
 				}
+				nObj.removeClass().addClass("btn btn-default btn-sm");
 				nObj.bind('click', function(){
 					that.OperatePerson(this, opt=="add"?"remove":"add");
+					that.element.trigger('label-click', [this]);
 				});
 				labelArea = target.find('a');
 				for( var j=0; j<labelArea.length; j++ ){
@@ -211,10 +213,12 @@
 			return true;
 		},
 		
-		getData: function(){
+		getData: function(opt){
 			var that = this,
 				data = [];
-			if (!this.FinishEditing()) return false;
+			if (opt!="uncheck"){
+				if (!this.FinishEditing()) return false;
+			}
 			this.element.find('tr').each(function(i, n){
 				data.push(that.getRowData(i));
 			});

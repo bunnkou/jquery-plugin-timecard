@@ -20,9 +20,8 @@
 		</div>
 		<table id="timecard-table" class="table table-hover" style="margin:0 auto;"></table>
 		<hr>
-		<div id="unchoice_persons">
-			<h5>未进项目人员：</h5>
-		</div>
+		<h5>未选择人员：</h5>
+		<div id="unchoice_persons"></div>
 		
 		<input type="hidden" id="forSelect2" value=""/>
 		
@@ -47,12 +46,13 @@
 						{field:'persons', title:'成员', width:'20%', editor:{type:'label'}}
 					]],
 					sourcePool: "unchoice_persons",
-					multiLabel: false,
+					multiLabel: true,
 					success:function(o){
-						var tmpArr = persons;
-						//RemoveElementFromArray(o.INIT_PERSONS, tmpArr);
-						o.OperatePerson(tmpArr, "remove");
+						o.OperatePerson(persons, "remove");
+						changeLabelStatus(o);
 					}
+				}).bind('label-click', function(event, obj){
+					changeLabelStatus();
 				});
 			});
 			
@@ -71,6 +71,37 @@
 			
 			function reload(){
 				$('#timecard-table').timecard('reload', oData2);
+			}
+			
+			function changeLabelStatus(obj){
+				var ret = null,
+					tmpStr = "",
+					tmpArr = [],
+					pool = $('#unchoice_persons');
+				if (obj) {
+					ret = [];
+					for (var i=0; i<obj.data.length; i++){
+						var opt = {};
+						opt.persons = obj.data[i].persons;
+						ret.push(opt);
+					}
+				}else{
+					ret = $('#timecard-table').timecard('getData', 'uncheck');
+				}
+				for (var i=0; i<ret.length; i++){
+					if (tmpStr) tmpStr += ",";
+					tmpStr += ret[i].persons;
+				}
+				tmpArr = tmpStr.split(",");
+				ret = pool.find('a');
+				for (var i=0; i<ret.length; i++){	//改变列表中人员状态
+					if (tmpArr.indexOf($(ret[i]).text())!=-1){
+						$(ret[i]).removeClass().addClass('btn btn-warning btn-sm').appendTo(pool);
+					}else{
+						if ( $(ret[i]).hasClass('btn-default') ) continue;
+						$(ret[i]).removeClass().addClass('btn btn-default btn-sm').prependTo(pool);
+					}
+				}
 			}
 			
 			function RemoveElementFromArray(subArr, tarArr){
